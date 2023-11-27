@@ -15,7 +15,7 @@ let images = [];
 // Función para cargar las imágenes desde la API
 async function fetchImages() {
     try {
-        const response = await fetch('https://japceibal.github.io/emercado-api/cats_products/.json');
+        const response = await fetch(PRODUCTS_URL);
         if (!response.ok) {
             throw new Error('No se pudo obtener la lista de imágenes desde la API.');
         }
@@ -169,7 +169,7 @@ let productInfo = {};
 async function getProductInfo () {
     
     try {
-        const productInfo = await fetch (`https://japceibal.github.io/emercado-api/products/${productID}.json`); // Solicita al servidor para obtener la información del producto
+        const productInfo = await fetch ( PRODUCT_INFO_URL + productID); // Solicita al servidor para obtener la información del producto
         const product = await productInfo.json(); // Convierte la respuesta a JSON
         return product
         
@@ -180,7 +180,7 @@ async function getProductInfo () {
 }
 // Función para obtener comentarios
 function getAndShowComentarios(id) {
-    let comentariosEndpoint = `https://japceibal.github.io/emercado-api/products_comments/${id}.json`;
+    let comentariosEndpoint = PRODUCT_INFO_COMMENTS_URL + id; 
     fetch(comentariosEndpoint)
         .then((response) => response.json())
         .then((comentarios) => {
@@ -340,7 +340,7 @@ function setProductCart(){
 
 document.addEventListener("DOMContentLoaded", function(e){
     eliminarEnDesarrollo();
-    getJSONData(PRODUCT_INFO_URL + productID + EXT_TYPE).then(function(resultObj){
+    getJSONData(PRODUCT_INFO_URL + productID).then(function(resultObj){
         if (resultObj.status === "ok") 
         {
             productInfo = resultObj.data;

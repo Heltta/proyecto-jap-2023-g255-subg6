@@ -1,18 +1,18 @@
-const APIcarritoURL =
-  'https://japceibal.github.io/emercado-api/user_cart/25801.json';
+const WEBSITE_URL = 'http://127.0.0.1:3000';
+const idUserCart = '25801';
+const APIcarritoURL = WEBSITE_URL + '/emercado-api/user_cart/' + idUserCart;
+const APIloginURL = WEBSITE_URL + '/emercado-api/login';
 
 // Function del Login:
 
 async function ingresar() {
-  let user = document.getElementById('user').value;
-
-  let pass = document.getElementById('pass').value;
-
   // traer carrito y guardarlo en el localStorage
+  const resultadoLogin = await postLogin();
 
-  if (user.length > 0 && pass.length > 0) {
+  if (resultadoLogin) {
+    let user = document.getElementById('user').value;
     localStorage.setItem('user', user);
-    let carrito = await getCarritoDeCompras();
+    let carrito = await getCarritoDeCompras(resultadoLogin.token);
     localStorage.setItem('cart', JSON.stringify(carrito));
     setUserIsLogged(true);
 
@@ -20,9 +20,33 @@ async function ingresar() {
   }
 }
 
+async function postLogin() {
+  let user = document.getElementById('user').value;
+  let pass = document.getElementById('pass').value;
+
+  const respuesta = await fetch(APIloginURL, {
+    method: 'POST',
+    body: JSON.stringify({
+      username: user,
+      password: pass,
+    }),
+  });
+
+  if (respuesta.ok) {
+    return respuesta.json();
+  }
+
+  return;
+}
+
 // Obtiene el carrito de compras del usuario desde la API
-async function getCarritoDeCompras() {
-  return fetch(APIcarritoURL)
+async function getCarritoDeCompras(webjsonToken) {
+  let myHeaders = new Headers();
+  myHeaders.append('access-token', webjsonToken);
+
+  return fetch(APIcarritoURL, {
+    headers: myHeaders,
+  })
     .then((response) => {
       if (response.ok) {
         return response.json();

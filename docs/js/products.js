@@ -122,9 +122,7 @@ async function getProducts() {
   try {
     // Pide a la API la lista de productos en la categoría espera a que
     // se resuelva la promesa y guarda la respuesta "cruda" en una constante
-    const respuestaAPI = await fetch(
-      `https://japceibal.github.io/emercado-api/cats_products/${idCategory}.json`
-    );
+    const respuestaAPI = await fetch(PRODUCTS_URL + idCategory);
     hideSpinner();
     // Parsea la respuesta y la retorna
     // Nota: En realidad retorna una promesa (usar await o .then())
